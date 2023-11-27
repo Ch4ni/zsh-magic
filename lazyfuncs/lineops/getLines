@@ -1,0 +1,7 @@
+
+function getLines() {
+	startLine=$((${1}-1))
+	endLine=$2
+	file=$3
+	head -${endLine} ${file} | tail -$((${endLine}-${startLine}))
+}

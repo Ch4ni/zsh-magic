@@ -1,0 +1,4 @@
+
+function getLine() {
+	getLines ${1} ${1} ${@:2}
+}

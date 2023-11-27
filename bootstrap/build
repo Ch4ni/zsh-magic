@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+local basedir=${1:-${PWD}}
+
+setopt extendedglob
+
+print "Compiling zsh functions under ${basedir}:"
+print "================================${(l:${#basedir}::=:::)=}"
+
+for zsrc in ${1:-${PWD}}/**/*~*.zwc(.); do
+  cmdstr="zcompile -UzR ${zsrc}"
+
+  printf "${cmdstr//${basedir}\//} ..."
+  eval ${cmdstr}
+  print " Done!"
+done | column -c $(tput cols) -d -t

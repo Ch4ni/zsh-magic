@@ -1,0 +1,4 @@
+
+	[[ -n "${DEBUG}" ]] && set -x
+	echo -n $(date +%Y)
+	[[ -n "${DEBUG}" ]] && set +x

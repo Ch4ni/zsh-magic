@@ -1,0 +1,21 @@
+	[[ -n "${DEBUG}" ]] && set -x
+	zparseopts -D -E - {s,-symbolic}=symbolicFlag\
+		{w,-week}=weekFlag\
+		{a,-abbrev,-abbreviate,-abbreviated}=abbrevFlag\
+		{-no-color}=noColorFlag
+
+	local fmtStr=''
+
+	if [[ -n "${weekFlag}" ]]; then
+		if [[ -n "${symbolicFlag}" ]]; then
+			[[ -n "${abbrevFlag}" ]] && fmtStr='%a' || fmtStr='%A'
+		else
+			# on numeric flag abbreviation is a no-op
+			fmtStr="%u"
+		fi
+	else
+		# on day of the month symbolic is a no-op
+		fmtStr="%d"
+	fi
+	date +${fmtStr}
+	[[ -n "${DEBUG}" ]] && set +x

@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+args=()
+basedir="${PWD}"
+
+while (( ${#@} > 0 )); do
+  if [[ -d "${1}" ]]; then
+    basedir="${1}"
+  else
+    args+=( ${1} )
+  fi
+  shift
+done
+
+for zobj in ${basedir}/**/*.zwc; do
+  cmdstr="rm ${args} ${zobj}"
+
+  printf "${cmdstr//${basedir}\//} ..."
+  eval ${cmdstr} >/dev/null
+  print " Done!"
+done | column -c $(tput cols) -d -t

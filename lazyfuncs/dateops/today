@@ -1,0 +1,37 @@
+	[[ -n "${DEBUG}" ]] && set -x
+	zparseopts -D -E - {b,-basedir}:=basedir\
+		{d,-isdir}=todayIsDirFlag\
+		{f,-force}=forceFlag\
+		{-no-color}=noColorFlag
+
+	# sanitize inputs populated by zparseopts for use
+	noColorFlag=${noColorFlag[-1]:+'\033[0m'}
+	# all other inputs are intended for forwarding - leave unmodified for simple use
+
+	local red=${noColorFlag:-'\033[0;31m'}
+	local green=${noColorFlag:-'\033[0;32m'}
+	local yellow=${noColorFlag:-'\033[0;33m'}
+	local blue=${noColorFlag:-'\033[0;34m'}
+	local purple=${noColorFlag:-'\033[0;35m'}
+	local teal=${noColorFlag:-'\033[0;36m'}
+	local no_color='\033[0m'
+
+	todayDirPath=$(__getTodayDir ${basedir} ${todayIsDirFlag} ${forceFlag})
+	if [[ ! -d "${todayDirPath}" ]]; then
+		mkdir -p ${todayDirPath}
+		local mkdir_status=$?
+		if [[ ${mkdir_status} -ne 0 ]]; then
+			echo -e "${yellow}Failed to create dir ${green}${todayDirPath}${no_color} Failed with error code ${mkdir_status}. ${red}Exiting.${no_color}"
+			return ${mkdir_status}
+		fi
+	fi
+
+	cd "${todayDirPath}"
+	local cd_status=$?
+	if [[ ${cd_status} -ne 0 ]]; then
+		echo -e "${red}Failed to switch to dir ${green}${todayDirPath}${no_color}; Failed with error code ${cd_status}. ${red} Exiting.${no_color}"
+		return ${cd_status}
+	fi
+
+	echo -e "${green}Success!${no_color} Switched to today's directory: ${yellow}${todayDirPath}${no_color}"
+	[[ -n "${DEBUG}" ]] && set +x

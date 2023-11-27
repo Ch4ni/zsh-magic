@@ -1,0 +1,2 @@
+
+	getLines "${@[@]}" | ${COPY_CMD:-pbcopy}

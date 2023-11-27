@@ -1,0 +1,14 @@
+	[[ -n "${DEBUG}" ]] && set -x
+	zparseopts -D -E - {n,-numeric}=numericFlag\
+		{a,-abbrev,-abbreviate,-abbreviated}=abbrevFlag\
+		{-no-color}=noColorFlag
+
+	local fmtStr=''
+
+	if [[ -n "${numericFlag}" ]]; then
+		fmtStr='%m'
+	else
+		[[ -n "${abbrevFlag}" ]] && fmtStr='%b' || fmtStr='%B'
+	fi
+	date +${fmtStr}
+	[[ -n "${DEBUG}" ]] && set +x

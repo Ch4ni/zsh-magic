@@ -1,0 +1,33 @@
+	[[ -n "${DEBUG}" ]] && set -x
+	zparseopts -D -E - {b,-basedir}:=basedir\
+		{d,-isdir}=todayIsDirFlag\
+		{f,-force}=forceFlag
+
+	# sanitize inputs populated by zparseopts for use
+	basedir=${basedir[-1]:-${TODAY_BASEDIR:-${HOME}/Scratch}}
+	forceFlag=${forceFlag[-1]}
+	todayIsDirFlag=${todayIsDirFlag[-1]}
+
+	local y=$(getYear)
+	local m="$(getMonth -n)-$(getMonth)"
+	local d_num=$(getDay)
+	local d_w_num=$(getDay -w)
+	local d_w_sym=$(getDay -w -s)
+
+	local todayDirBasePath="${basedir}/${y}/${m}/${d_num}-${d_w_num}-${d_w_sym}"
+	local todayFileBasePath="${basedir}/${y}/${m}"
+
+	local todayDirPath
+	if [[ -n "${todayIsDirFlag}" ]]; then
+		todayDirPath="${todayDirBasePath}"
+	else
+		if [[ -d "${todayDirBasePath}" && -z "${forceFlag}" ]]; then
+			# if today's dir already exists, set today to that path ... unless the
+			# forceFlag is supplied to force compliance
+			todayDirPath="${todayDirBasePath}"
+		else
+			todayDirPath=${todayFileBasePath}
+		fi
+	fi
+	echo -n "${todayDirPath}"
+	[[ -n "${DEBUG}" ]] && set +x

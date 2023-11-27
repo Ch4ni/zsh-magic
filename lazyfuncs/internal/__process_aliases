@@ -1,0 +1,3 @@
+  for name cmd in ${(kv)__z_aliases}; do
+    eval alias ${name}=\"${cmd}\"
+  done
