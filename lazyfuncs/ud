@@ -1,1 +1,9 @@
-cd $(xdg-user-dir $1)/${@:1}
+# TODO: add help message
+# TODO: add autocompletion
+
+# this is a convenience to allow me to abuse the xdg utils for various
+# convenience paths.
+# 'ud' is an acronym for 'User Directory'
+# Usage: ud <type> <path>
+# Example: ud CONFIG nvim/lua/config # will cd into the nvim config directory
+cd $(xdg-user-dir ${@:1:1})/${@:2}
