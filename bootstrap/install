@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+local args=${@}
+
+__zshenv_path="${HOME}/.zshenv"
+
+if [[ -s "${__zshenv_path}" ]] && [[ ! ${args[(ie)"-f"]} -lt ${#args} ]]; then
+  print "${__zshenv_path} already exists, and has contents. To ignore the contents, please run with the -f argument"
+  exit -1
+fi
+
+if [[ ! -o "${__zshenv_path}" ]]; then
+  print "${__zshenv_path} is not writable by the installer user (${USER}) ... please check the file permissions."
+  exit -1
+fi
+
+
+# TODO: fix this ... PWD is *not* the right choice
+print "Writing default ${__zshenv_path} with ZDOTDIR value ${PWD}"
+
+# TODO: flesh out this template with default values, and comments
+cat <<EOF>${__zshenv_path}
+export ZDOTDIR="${PWD}"
+EOF
